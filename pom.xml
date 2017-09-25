@@ -130,12 +130,6 @@
 			<artifactId>junit</artifactId>
 			<version>4.10</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/io.netty/netty -->
-		<dependency>
-			<groupId>io.netty</groupId>
-			<artifactId>netty</artifactId>
-			<version>3.10.6.Final</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.netty/netty-all -->
 		<dependency>
 			<groupId>io.netty</groupId>
@@ -154,6 +148,11 @@
 			<groupId>net.sourceforge.cssparser</groupId>
 			<artifactId>cssparser</artifactId>
 			<version>0.9.23</version>
+		</dependency>
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty-all</artifactId>
+			<version>4.1.0.Final</version>
 		</dependency>
 	</dependencies>
 </project>
