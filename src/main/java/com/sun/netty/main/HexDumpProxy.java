@@ -14,7 +14,7 @@ public class HexDumpProxy {
  
         // 解析命令行参数。
         int localPort = 8081;
-        String remoteHost = "127.0.0.1";
+        String remoteHost = "10.0.0.215";
         int remotePort = 8080;
         System.err.println(
                 "Proxying *:" + localPort + " to " +

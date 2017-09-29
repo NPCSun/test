@@ -79,6 +79,8 @@ public class HexDumpProxyInboundHandler extends SimpleChannelUpstreamHandler {
         //e.getCause().printStackTrace();
         closeOnFlush(e.getChannel());
     }
+
+
     private static class OutboundHandler extends SimpleChannelUpstreamHandler {
         private final Channel inboundChannel;
         OutboundHandler(Channel inboundChannel) {
