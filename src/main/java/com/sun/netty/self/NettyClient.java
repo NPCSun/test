@@ -3,6 +3,7 @@ package com.sun.netty.self;
 import java.util.concurrent.TimeUnit;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
@@ -10,6 +11,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.ChannelPipeline;
 import io.netty.channel.EventLoopGroup;
 import io.netty.channel.SimpleChannelInboundHandler;
+import io.netty.channel.WriteBufferWaterMark;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -25,6 +27,7 @@ public class NettyClient {
 			b.group(group)
 					.channel(NioSocketChannel.class)
 					.option(ChannelOption.TCP_NODELAY, true)
+					.option(ChannelOption.WRITE_BUFFER_WATER_MARK, new WriteBufferWaterMark(32 * 1024, 64 * 1024))//1KB=1024*8byte=8192byte
 					.handler(new ChannelInitializer<SocketChannel>() {
 						@Override
 						protected void initChannel(SocketChannel ch) throws Exception {
@@ -64,13 +67,23 @@ public class NettyClient {
 
 		@Override
 		protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-			ctx.writeAndFlush(msg);
+			/*ctx.writeAndFlush(msg);
 			count++;
 			if(count%50000 == 0){
 				long end = System.currentTimeMillis();
 				System.out.println("client read 50000 msg. 耗时(毫秒)：" + (end-begin));
 				begin = end;
+			}*/
+			Channel channel = ctx.channel();
+			while(true){
+				//Thread.sleep(10);
+
+				if(channel.isWritable()){
+					ctx.writeAndFlush(msg);
+				}
+
 			}
+
 		}
 
 		@Override

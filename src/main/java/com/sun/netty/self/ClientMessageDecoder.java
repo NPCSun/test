@@ -25,7 +25,7 @@ public class ClientMessageDecoder extends LengthFieldBasedFrameDecoder {
 			return null;
 		}
 
-		//in.markReaderIndex();
+		in.markReaderIndex();
 
 		byte type = in.readByte();
 		int dataLength = in.readInt();

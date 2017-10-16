@@ -59,4 +59,8 @@ public class Message implements Serializable{
 	public void setBody(String body) {
 		this.body = body;
 	}
+
+	public static void main(String[] args) {
+		System.out.println(1<<2);
+	}
 }
