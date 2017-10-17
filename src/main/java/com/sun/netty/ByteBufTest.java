@@ -9,7 +9,8 @@ import io.netty.buffer.UnpooledByteBufAllocator;
  */
 public class ByteBufTest {
 	public static void main(String[] args) {
-		UnpooledByteBufAllocator allocator = UnpooledByteBufAllocator.DEFAULT;
+		//UnpooledByteBufAllocator allocator = UnpooledByteBufAllocator.DEFAULT;
+		UnpooledByteBufAllocator allocator = new UnpooledByteBufAllocator(false);
 		//可以指定容量，也可以不指定，最好指定大小，方便后面解码。
 		ByteBuf buf = allocator.directBuffer(5);
 		byte[] src = "hello".getBytes();
