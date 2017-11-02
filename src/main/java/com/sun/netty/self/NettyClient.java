@@ -2,9 +2,11 @@ package com.sun.netty.self;
 
 import java.util.concurrent.TimeUnit;
 
+import com.alibaba.fastjson.JSON;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -16,11 +18,16 @@ import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.SocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+
 /**
  * Created by sun on 2017/9/27 上午9:54.
  */
+@Component("nettyClient")
 public class NettyClient {
-	public void connect(String host, int port) throws InterruptedException {
+	public void connect(String host, int port, final ApplicationContext context) throws InterruptedException {
 		EventLoopGroup group = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
@@ -35,8 +42,8 @@ public class NettyClient {
 							ChannelPipeline p = ch.pipeline();
 							p.addLast(new ClientMessageDecoder(1<<20, 0, 4));
 							p.addLast(new MessageEncoder());
-
-							p.addLast(new ClientHandler());
+							ClientHandler clientHandler = (ClientHandler)context.getBean("clientHandler");
+							p.addLast(clientHandler);
 						}
 					});
 
@@ -44,45 +51,59 @@ public class NettyClient {
 
 			future.awaitUninterruptibly(2000, TimeUnit.MILLISECONDS);
 
-			future.channel().closeFuture().sync();
+			future.channel().closeFuture();
 		} finally {
-			group.shutdownGracefully();
+			//group.shutdownGracefully();
 		}
 	}
 
-	private class ClientHandler extends SimpleChannelInboundHandler<Message> {
+	@ChannelHandler.Sharable
+	@Service("clientHandler")
+	public class ClientHandler extends SimpleChannelInboundHandler<TransferMessage> {
 
 		private int count = 0;
 
 		private long begin = System.currentTimeMillis();
 
-		String body = "Hello world from client:";
-		Message msg = new Message((byte)1, body);
+		private Channel channel;
+
+		Message message = new Message();
+
+		public Channel getChannel() {
+			return channel;
+		}
 
 		@Override
 		public void channelActive(ChannelHandlerContext ctx) throws Exception {
+			channel = ctx.channel();
+			message.setId(1000);
+			message.setValue("i am form client");
+			TransferMessage msg = new TransferMessage((byte)1, JSON.toJSONString(message));
 			ctx.writeAndFlush(msg);
 			ctx.executor().schedule(new HeartBeatTask(ctx), 5, TimeUnit.SECONDS);
 		}
 
 		@Override
-		protected void channelRead0(ChannelHandlerContext ctx, Message msg) throws Exception {
-			/*ctx.writeAndFlush(msg);
+		protected void channelRead0(ChannelHandlerContext ctx, TransferMessage msg) throws Exception {
+			/*ctx.writeAndFlush(transferMessage);
 			count++;
 			if(count%50000 == 0){
 				long end = System.currentTimeMillis();
-				System.out.println("client read 50000 msg. 耗时(毫秒)：" + (end-begin));
+				System.out.println("client read 50000 transferMessage. 耗时(毫秒)：" + (end-begin));
 				begin = end;
 			}*/
-			Channel channel = ctx.channel();
+			//***********************************************************
+			DefaultFuture.received(msg);
+			//***********************************************************
+			/*Channel channel = ctx.channel();
 			while(true){
-				//Thread.sleep(10);
+				Thread.sleep(10000);
 
 				if(channel.isWritable()){
-					ctx.writeAndFlush(msg);
+					ctx.writeAndFlush(transferMessage);
 				}
 
-			}
+			}*/
 
 		}
 
@@ -96,6 +117,6 @@ public class NettyClient {
 
 	public static void main(String[] args) throws Exception {
 
-		new NettyClient().connect("127.0.0.1", 8081);
+		//new NettyClient().connect("127.0.0.1", 8081);
 	}
 }

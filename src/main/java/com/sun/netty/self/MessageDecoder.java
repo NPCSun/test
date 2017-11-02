@@ -3,7 +3,6 @@ package com.sun.netty.self;
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.LengthFieldBasedFrameDecoder;
-import io.netty.util.ReferenceCountUtil;
 
 /**
  * Created by sun on 2017/9/26 上午11:17.
@@ -40,7 +39,7 @@ public class MessageDecoder extends LengthFieldBasedFrameDecoder {
 		in.readBytes(data);
 
 		String body = new String(data, "UTF-8");
-		Message msg = new Message(type, dataLength, body);
+		TransferMessage msg = new TransferMessage(type, dataLength, body);
 
 		return msg;
 	}

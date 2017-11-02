@@ -9,11 +9,11 @@ import io.netty.handler.codec.MessageToByteEncoder;
 /**
  * Created by sun on 2017/9/26 上午11:22.
  */
-public class MessageEncoder extends MessageToByteEncoder<Message> {
+public class MessageEncoder extends MessageToByteEncoder<TransferMessage> {
 	private final Charset charset = Charset.forName("utf-8");
 
 	@Override
-	protected void encode(ChannelHandlerContext ctx, Message msg, ByteBuf out) throws Exception {
+	protected void encode(ChannelHandlerContext ctx, TransferMessage msg, ByteBuf out) throws Exception {
 		byte[] data = msg.getBody().getBytes(charset);
 		//
 		out.writeByte(msg.getType());

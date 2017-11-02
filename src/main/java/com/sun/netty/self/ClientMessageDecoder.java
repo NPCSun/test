@@ -39,7 +39,7 @@ public class ClientMessageDecoder extends LengthFieldBasedFrameDecoder {
 		in.readBytes(data);
 
 		String body = new String(data, "UTF-8");
-		Message msg = new Message(type, dataLength, body);
+		TransferMessage msg = new TransferMessage(type, dataLength, body);
 
 		return msg;
 	}
