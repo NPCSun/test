@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+	<beans xmlns="http://www.springframework.org/schema/beans"
+		   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		   xmlns:context="http://www.springframework.org/schema/context"
+		   xmlns:sharding="http://shardingjdbc.io/schema/shardingjdbc/sharding"
+		   xmlns:tx="http://www.springframework.org/schema/tx"
+		   xsi:schemaLocation="http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context.xsd
+                        http://shardingjdbc.io/schema/shardingjdbc/sharding
+                        http://shardingjdbc.io/schema/shardingjdbc/sharding/sharding.xsd
+                        http://www.springframework.org/schema/tx
+        				http://www.springframework.org/schema/tx/spring-tx-3.1.xsd
+                        ">
+
+	<bean id="ds_0" class="com.alibaba.druid.pool.DruidDataSource"
+		init-method="init" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/ds_0" />
+		<property name="username" value="root" />
+		<property name="password" value="123456" />
+		<property name="filters" value="stat" />
+		<property name="maxActive" value="100" />
+		<property name="initialSize" value="1" />
+		<property name="maxWait" value="60000" />
+		<property name="minIdle" value="1" />
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+			value="50" />
+	</bean>
+	<bean id="ds_1" class="com.alibaba.druid.pool.DruidDataSource"
+		  init-method="init" destroy-method="close">
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="url" value="jdbc:mysql://127.0.0.1:3306/ds_1" />
+		<property name="username" value="root" />
+		<property name="password" value="123456" />
+		<property name="filters" value="stat" />
+		<property name="maxActive" value="100" />
+		<property name="initialSize" value="1" />
+		<property name="maxWait" value="60000" />
+		<property name="minIdle" value="1" />
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize"
+				  value="50" />
+	</bean>
+
+	<sharding:inline-strategy id="databaseStrategy" sharding-column="user_id"  algorithm-expression="ds_${user_id % 2}"/>
+	<sharding:inline-strategy id="orderTableStrategy" sharding-column="order_id" algorithm-expression="t_order_${order_id % 2}" />
+	<sharding:inline-strategy id="orderMessageTableStrategy" sharding-column="order_id" algorithm-expression="t_order_message_${order_id % 2}" />
+
+	<sharding:data-source id="shardingDataSource">
+		<sharding:sharding-rule data-source-names="ds_0,ds_1" default-data-source-name="ds_0">
+			<sharding:table-rules>
+				<sharding:table-rule logic-table="t_order" actual-data-nodes="ds_${0..1}.t_order_${0..1}" database-strategy-ref="databaseStrategy" table-strategy-ref="orderTableStrategy" />
+				<sharding:table-rule logic-table="t_order_message" actual-data-nodes="ds_${0..1}.t_order_message_${0..1}" database-strategy-ref="databaseStrategy" table-strategy-ref="orderMessageTableStrategy" />
+			</sharding:table-rules>
+			<sharding:binding-table-rules>
+				<sharding:binding-table-rule logic-tables="t_order, t_order_message" />
+			</sharding:binding-table-rules>
+		</sharding:sharding-rule>
+		<sharding:props>
+			<prop key="sql.show">true</prop>
+		</sharding:props>
+	</sharding:data-source>
+
+	<!-- Transaction manager for a single JDBC DataSource -->
+	<bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager" >
+		<property name="dataSource" ref="shardingDataSource"/>
+	</bean>
+
+	<!-- 支持 @Transactional 标记 -->
+	<tx:annotation-driven transaction-manager="txManager"/>
+
+</beans>

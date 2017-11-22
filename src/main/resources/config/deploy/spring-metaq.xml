@@ -11,7 +11,7 @@
     <context:annotation-config />
 	<!--  message session factory -->
     <bean id="sessionFactory" class="com.taobao.metamorphosis.client.extension.spring.MetaqMessageSessionFactoryBean">
-        <property name="zkConnect" value="127.0.0.1:2181"/>
+        <property name="zkConnect" value="10.0.0.213:2181"/>
         <property name="zkSessionTimeoutMs" value="30000"/>
         <property name="zkConnectionTimeoutMs" value="30000"/>
         <property name="zkSyncTimeMs" value="5000"/>

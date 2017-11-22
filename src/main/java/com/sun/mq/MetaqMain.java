@@ -1,6 +1,6 @@
 package com.sun.mq;
 
-import java.util.Date;
+import java.sql.SQLException;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,25 +8,23 @@ import java.util.concurrent.Executors;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import com.alibaba.fastjson.JSON;
+import com.sun.jdbc.ShardingJdbcService;
+import com.sun.jdbc.ShardingJdbcTest;
 import com.sun.netty.self.DefaultFuture;
 import com.sun.netty.self.Message;
 import com.sun.netty.self.TransferMessage;
 import com.sun.netty.self.NettyClient;
-import com.taobao.metamorphosis.client.extension.spring.MessageBuilder;
-import com.taobao.metamorphosis.client.extension.spring.MetaqTemplate;
-import com.taobao.metamorphosis.client.producer.SendResult;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
 
 public class MetaqMain {
 
 
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, SQLException {
 		CountDownLatch cdl = new CountDownLatch(1);
-		String config = "classpath*:config/deploy/spring-*.xml";
+		String config = "classpath*:config/deploy/spring-total.xml";
 		final ClassPathXmlApplicationContext context = new ClassPathXmlApplicationContext(config);
 	    context.start();
-		ExecutorService es = Executors.newFixedThreadPool(1);
+		/*ExecutorService es = Executors.newFixedThreadPool(1);
 		es.submit(new Runnable() {
 			@Override
 			public void run() {
@@ -52,9 +50,12 @@ public class MetaqMain {
 
 		Message result = (Message)future.get(3000);
 
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>  " + result.getValue() + "  <<<<<<<<<<<<<<<<<<<<<<<<<");
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>  " + result.getValue() + "  <<<<<<<<<<<<<<<<<<<<<<<<<");*/
 
-		MetaqTemplate metaqTemplate = context.getBean("metaqTemplate", MetaqTemplate.class);
+		ShardingJdbcService shardingJdbcService = context.getBean("shardingJdbcService", ShardingJdbcService.class);
+		shardingJdbcService.testInsertTransaction();
+
+		/*MetaqTemplate metaqTemplate = context.getBean("metaqTemplate", MetaqTemplate.class);
 	    final String topic = "sunmq";
 	    try {
 			final SendResult sendResult = metaqTemplate
@@ -69,7 +70,7 @@ public class MetaqMain {
 		} finally{
 			cdl.countDown();
 		}
-	    /*try {
+	    *//*try {
 			cdl.await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
