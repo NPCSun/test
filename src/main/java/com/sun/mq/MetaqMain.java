@@ -53,8 +53,8 @@ public class MetaqMain {
 		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>  " + result.getValue() + "  <<<<<<<<<<<<<<<<<<<<<<<<<");*/
 
 		ShardingJdbcService shardingJdbcService = context.getBean("shardingJdbcService", ShardingJdbcService.class);
-		shardingJdbcService.testInsertTransaction();
-
+		//shardingJdbcService.testInsertTransaction();
+		shardingJdbcService.testSelect();
 		/*MetaqTemplate metaqTemplate = context.getBean("metaqTemplate", MetaqTemplate.class);
 	    final String topic = "sunmq";
 	    try {

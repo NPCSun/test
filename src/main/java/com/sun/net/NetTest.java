@@ -9,8 +9,14 @@ import java.net.UnknownHostException;
 public class NetTest {
 	public static void main(String[] args) {
 		try {
-			String host = InetAddress.getLocalHost().getHostAddress();
+			InetAddress hostInet = InetAddress.getLocalHost();
+			String host = hostInet.getHostAddress();
 			System.out.println(host);
+			InetAddress[] inetAddresses = InetAddress.getAllByName("sundeMacBook-Air.local");
+			for(InetAddress item : inetAddresses){
+				System.out.println(item.getHostAddress());
+			}
+			//System.out.println(host);
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}

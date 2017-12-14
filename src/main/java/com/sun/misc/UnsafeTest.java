@@ -34,5 +34,15 @@ public class UnsafeTest {
 		A a = (A) unsafe.allocateInstance(A.class);
 		a.setNum(10);
 		System.out.println(a.getNum());
+		System.out.println(a);
+		Integer s1=10;
+		Integer s2=10;
+		System.out.println(s1==s2);
+		int address1 = System.identityHashCode(s1);
+		int address2 = System.identityHashCode(s1);
+		System.out.println(Integer.toHexString(address1));
+		System.out.println(Integer.toHexString(address2));
+
+
 	}
 }
