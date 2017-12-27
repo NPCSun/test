@@ -10,7 +10,7 @@ public class Test {
 
 	static void stream(List<Person> people) {
 
-		long count = people.stream()
+		long count = people.parallelStream()
 				.filter(person1 -> person1.getName().contains("sun"))//惰性求值筛选
 				.count();//及早求值统计
 

@@ -55,7 +55,8 @@ public class DefaultFuture {
         FUTURES.put(id, this);
         CHANNELS.put(id, channel);
     }
-    
+
+    // 同步阻塞
     public Object get(int timeout){
         if (! isDone()) {
             long start = System.currentTimeMillis();
