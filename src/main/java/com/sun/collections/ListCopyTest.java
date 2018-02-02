@@ -1,4 +1,4 @@
-package com.sun;
+package com.sun.collections;
 
 import java.util.ArrayList;
 import java.util.List;

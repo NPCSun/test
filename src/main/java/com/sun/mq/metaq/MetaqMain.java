@@ -1,4 +1,4 @@
-package com.sun.mq;
+package com.sun.mq.metaq;
 
 import java.sql.SQLException;
 import java.util.concurrent.CountDownLatch;

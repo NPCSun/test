@@ -30,11 +30,11 @@ public class WaitTest {
 
 
 	public static void main(String[] args) {
-		WaitTest wt  = new WaitTest();
+		final WaitTest wt  = new WaitTest();
 		int count = 0;
 		Thread thread;
 		while(count<5){
-			int finalCount = count;
+			final int finalCount = count;
 			thread = new Thread(new Runnable() {
 				@Override
 				public void run() {

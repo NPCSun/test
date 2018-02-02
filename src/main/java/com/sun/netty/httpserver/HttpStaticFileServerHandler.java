@@ -71,9 +71,9 @@ import org.apache.commons.lang.StringUtils;
  * Web browser caching works with HTTP headers as illustrated by the following
  * sample:
  * <ol>
- * <li>Request #1 returns the content of {@code /file1.txt}.</li>
+ * <li>RequestClient #1 returns the content of {@code /file1.txt}.</li>
  * <li>Contents of {@code /file1.txt} is cached by the browser.</li>
- * <li>Request #2 for {@code /file1.txt} does not return the contents of the
+ * <li>RequestClient #2 for {@code /file1.txt} does not return the contents of the
  *     file again. Rather, a 304 Not Modified is returned. This tells the
  *     browser to use the contents stored in its cache.</li>
  * <li>The server knows the file has not been modified because the
@@ -82,11 +82,11 @@ import org.apache.commons.lang.StringUtils;
  * </ol>
  *
  * <pre>
- * Request #1 Headers
+ * RequestClient #1 Headers
  * ===================
  * GET /file1.txt HTTP/1.1
  *
- * Response #1 Headers
+ * ResponseServer #1 Headers
  * ===================
  * HTTP/1.1 200 OK
  * Date:               Tue, 01 Mar 2011 22:44:26 GMT
@@ -94,12 +94,12 @@ import org.apache.commons.lang.StringUtils;
  * Expires:            Tue, 01 Mar 2012 22:44:26 GMT
  * Cache-Control:      private, max-age=31536000
  *
- * Request #2 Headers
+ * RequestClient #2 Headers
  * ===================
  * GET /file1.txt HTTP/1.1
  * If-Modified-Since:  Wed, 30 Jun 2010 21:36:48 GMT
  *
- * Response #2 Headers
+ * ResponseServer #2 Headers
  * ===================
  * HTTP/1.1 304 Not Modified
  * Date:               Tue, 01 Mar 2011 22:44:28 GMT
@@ -351,7 +351,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
 	}
 
 	/**
-	 * Sets the Date and Cache headers for the HTTP Response
+	 * Sets the Date and Cache headers for the HTTP ResponseServer
 	 *
 	 * @param response
 	 *            HTTP response
@@ -375,7 +375,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
 	}
 
 	/**
-	 * Sets the content type header for the HTTP Response
+	 * Sets the content type header for the HTTP ResponseServer
 	 *
 	 * @param response
 	 *            HTTP response

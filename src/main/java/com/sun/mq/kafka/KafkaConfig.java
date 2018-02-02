@@ -1,4 +1,4 @@
-package com.sun.kafka;
+package com.sun.mq.kafka;
 
 import java.util.HashMap;
 import java.util.Map;

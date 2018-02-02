@@ -1,4 +1,4 @@
-package com.sun.mq;
+package com.sun.lock;
 
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.locks.ReentrantLock;

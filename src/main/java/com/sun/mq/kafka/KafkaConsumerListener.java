@@ -1,4 +1,4 @@
-package com.sun.kafka;
+package com.sun.mq.kafka;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 
@@ -9,11 +9,11 @@ import org.springframework.stereotype.Component;
  * Created by sun on 2017/12/26 下午4:34.
  */
 @Component
-public class KafkaConsumerListenerB {
+public class KafkaConsumerListener {
 
-	@KafkaListener(topics = { "test" }, groupId = "B")
+	@KafkaListener(topics = { "test" }, groupId = "A")
 	public void taskCmd(ConsumerRecord<?, ?> record) {
 		Object message = record.value();
-		System.out.println("B收到管理平台命令:" + message);
+		System.out.println("A收到管理平台命令:" + message);
 	}
 }

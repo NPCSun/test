@@ -1,20 +1,20 @@
 package com.sun.security;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.Provider;
 import java.security.Security;
 import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
-
-import javax.crypto.Cipher;
 
 import org.bouncycastle.asn1.pkcs.PKCSObjectIdentifiers;
 import org.bouncycastle.cert.X509CertificateHolder;
@@ -27,6 +27,7 @@ import org.bouncycastle.cms.CMSSignedDataGenerator;
 import org.bouncycastle.cms.CMSTypedData;
 import org.bouncycastle.cms.RecipientInformation;
 import org.bouncycastle.cms.RecipientInformationStore;
+import org.bouncycastle.cms.SignerInfoGenerator;
 import org.bouncycastle.cms.SignerInformation;
 import org.bouncycastle.cms.SignerInformationStore;
 import org.bouncycastle.cms.jcajce.JcaSignerInfoGeneratorBuilder;
@@ -45,6 +46,23 @@ public class MessageUtil {
 	//证书库类型
 	private String ksType = "JKS";//JKS  PKCS12
 
+	private static CertificateFactory certFactory;
+	private static X509Certificate cert;
+
+	static{
+		// 添加BouncyCastle作为安全提供
+		Security.addProvider(new BouncyCastleProvider());
+		try {
+			certFactory = CertificateFactory.getInstance("X.509", new BouncyCastleProvider());
+			InputStream inputStream = new FileInputStream("/root/sunfei.crt");
+			cert = (X509Certificate) certFactory.generateCertificate(inputStream);
+		} catch (CertificateException e) {
+			e.printStackTrace();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+
 	/**
 	 * 生成数字签名
 	 * @param srcMsg 源信息
@@ -55,48 +73,42 @@ public class MessageUtil {
 	 */
 	public byte[] signMessage(String srcMsg, String charSet, String certPath, String certPwd) {
 		String priKeyName = null;
+		long begin = System.currentTimeMillis();
 		char passphrase[] = certPwd.toCharArray();
 
 		try {
-			Provider provider = new BouncyCastleProvider();
-			// 添加BouncyCastle作为安全提供
-			Security.addProvider(provider);
-
 			// 加载证书
-			KeyStore ks = KeyStore.getInstance(ksType);
-			ks.load(new FileInputStream(certPath), passphrase);
+			KeyStore keyStore = KeyStore.getInstance(ksType);
+			keyStore.load(new FileInputStream(certPath), passphrase);
 
-			if (ks.aliases().hasMoreElements()) {
-				priKeyName = ks.aliases().nextElement();
+			if (keyStore.aliases().hasMoreElements()) {
+				priKeyName = keyStore.aliases().nextElement();
 			}
 
-			Certificate cert = (Certificate) ks.getCertificate(priKeyName);
+			Certificate cert = (Certificate) keyStore.getCertificate(priKeyName);
+			X509Certificate cerx509 = (X509Certificate) cert;
 
 			// 获取私钥
-			PrivateKey prikey = (PrivateKey) ks.getKey(priKeyName, passphrase);
-
-			X509Certificate cerx509 = (X509Certificate) cert;
+			PrivateKey prikey = (PrivateKey) keyStore.getKey(priKeyName, passphrase);
 
 			List<Certificate> certList = new ArrayList<Certificate>();
 			certList.add(cerx509);
-
-			CMSTypedData msg = (CMSTypedData) new CMSProcessableByteArray(
-					srcMsg.getBytes(charSet));
-
 			Store certs = new JcaCertStore(certList);
 
-			CMSSignedDataGenerator gen = new CMSSignedDataGenerator();
-			ContentSigner sha1Signer = new JcaContentSignerBuilder(
-					"SHA1withRSA").setProvider("BC").build(prikey);
+			CMSTypedData msg = (CMSTypedData) new CMSProcessableByteArray(srcMsg.getBytes(charSet));
 
-			gen.addSignerInfoGenerator(new JcaSignerInfoGeneratorBuilder(
-					new JcaDigestCalculatorProviderBuilder().setProvider("BC")
-							.build()).build(sha1Signer, cerx509));
+			//MD2withRSA MD5withRSA SHA1withRSA SHA224withRSA SHA256withRSA SHA384withRSA SHA512withRSA
+			CMSSignedDataGenerator cmsSignedDataGenerator = new CMSSignedDataGenerator();
+			ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA512withRSA")
+											.build(prikey);
 
-			gen.addCertificates(certs);
+			SignerInfoGenerator signerInfoGenerator = new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().build()).build(sha1Signer, cerx509);
+			cmsSignedDataGenerator.addSignerInfoGenerator(signerInfoGenerator);
 
-			CMSSignedData sigData = gen.generate(msg, true);
+			cmsSignedDataGenerator.addCertificates(certs);
 
+			CMSSignedData sigData = cmsSignedDataGenerator.generate(msg, true);
+			System.out.println("加密耗时：" + (System.currentTimeMillis()-begin));
 			return Base64.encode(sigData.getEncoded());
 
 		} catch (Exception e) {
@@ -113,19 +125,20 @@ public class MessageUtil {
 	public boolean signedDataVerify(byte[] signedData) {
 		boolean verifyRet = true;
 		try {
+			long begin = System.currentTimeMillis();
 			// 新建PKCS#7签名数据处理对象
 			CMSSignedData sign = new CMSSignedData(signedData);
 
 			// 添加BouncyCastle作为安全提供
-			Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			Security.addProvider(new BouncyCastleProvider());
 
 			// 获得证书信息
 			Store certs = sign.getCertificates();
 
 			// 获得签名者信息
 			SignerInformationStore signers = sign.getSignerInfos();
-			Collection c = signers.getSigners();
-			Iterator it = c.iterator();
+			Collection signersCollection = signers.getSigners();
+			Iterator it = signersCollection.iterator();
 
 			// 当有多个签名者信息时需要全部验证
 			while (it.hasNext()) {
@@ -145,7 +158,7 @@ public class MessageUtil {
 					verifyRet = false;
 				}
 			}
-
+			System.out.println("解密耗时：" + (System.currentTimeMillis()-begin));
 		} catch (Exception e) {
 			verifyRet = false;
 			e.printStackTrace();
@@ -155,7 +168,7 @@ public class MessageUtil {
 	}
 
 	/**
-	 * 加密数据
+	 * 数字信封加密-（des加密数据，rsa加密密码）
 	 * @param srcMsg 源信息
 	 * @param certPath 证书路径
 	 * @param charSet 字符编码
@@ -163,13 +176,9 @@ public class MessageUtil {
 	 * @throws Exception
 	 */
 	public String envelopeMessage(String srcMsg, String certPath, String charSet) throws Exception {
-		CertificateFactory certFactory;
-		X509Certificate cert;
-		certFactory = CertificateFactory.getInstance("X.509", new BouncyCastleProvider());
-
-		InputStream inputStream = new FileInputStream(certPath);
-		cert = (X509Certificate) certFactory.generateCertificate(inputStream);
-
+		System.out.println("加密前：" + srcMsg);
+		long begin = System.currentTimeMillis();
+		Security.addProvider(new BouncyCastleProvider());
 		//添加数字信封
 		CMSTypedData msg = new CMSProcessableByteArray(srcMsg.getBytes(charSet));
 
@@ -182,9 +191,9 @@ public class MessageUtil {
 				new JceCMSContentEncryptorBuilder(PKCSObjectIdentifiers.rc4)
 						.setProvider("BC").build());
 
+		System.out.println("加密耗时：" + (System.currentTimeMillis()-begin));
 		String rslt = new String(Base64.encode(ed.getEncoded()));
-
-		System.out.println(rslt);
+		System.out.println("加密后：" + rslt);
 		return rslt;
 	}
 
@@ -237,10 +246,13 @@ public class MessageUtil {
 	public static void main(String[] args) throws Exception {
 		MessageUtil messageUtil = new MessageUtil();
 
-		String password = "sunaaaaa";
-		String encryptPassword = messageUtil.envelopeMessage(password, "/root/sunfei.crt", "UTF-8");
+		//客户端用公钥加密 传至服务端 私钥解密
+		String data = "客户端用公钥加密 传至服务端 私钥解密";
+		byte[] sign = messageUtil.signMessage(data, "UTF-8", "/root/sunfei", "123456");
+		messageUtil.signedDataVerify(Base64.decode(sign));
+		String encryptPassword = messageUtil.envelopeMessage(data, "/root/sunfei.crt", "UTF-8");
 		String decryptPassword = messageUtil.openEnvelope(encryptPassword, "/root/sunfei", "123456", "UTF-8");
-		System.out.println(decryptPassword);
+		System.out.println("解密后：" + decryptPassword);
 
 	}
 

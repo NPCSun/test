@@ -1,4 +1,4 @@
-package com.sun.mq;
+package com.sun.mq.metaq;
 
 import java.util.concurrent.Executor;
 import com.taobao.metamorphosis.Message;

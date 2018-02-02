@@ -15,7 +15,7 @@
         http://www.springframework.org/schema/task
         http://www.springframework.org/schema/task/spring-task-3.0.xsd
         ">
-	<context:component-scan base-package="com.sun.kafka" annotation-config="true" />
+	<context:component-scan base-package="com.sun.mq.kafka" annotation-config="true" />
 	<!--&lt;!&ndash; 定义consumer的参数 &ndash;&gt;
 	<bean id="consumerProperties" class="java.util.HashMap">
 		<constructor-arg>
@@ -57,5 +57,5 @@
 		<constructor-arg name="containerProperties" ref="containerProperties" />
 	</bean>
 
-	<bean id="kafkaConsumerListener" class="com.sun.kafka.KafkaConsumerListener"/>-->
+	<bean id="kafkaConsumerListener" clacom.sun.mq.kafkaafka.KafkaConsumerListener"/>-->
 </beans>

@@ -7,6 +7,10 @@ import java.util.Date;
 public class NannoTimeTest {
 
 	public static void main(String[] args) {
+
+		String[] s = new String[5];
+		Object obj = s;
+		System.out.println(s.length);
 		/* long startTime = System.nanoTime();
 		 long t1 = System.currentTimeMillis();
 		 System.out.println(startTime);

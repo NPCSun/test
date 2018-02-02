@@ -1,11 +1,9 @@
-package com.sun.kafka;
+package com.sun.mq.kafka;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.kafka.clients.producer.Producer;
 import org.apache.kafka.clients.producer.ProducerConfig;
-import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.common.serialization.StringSerializer;
 
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
