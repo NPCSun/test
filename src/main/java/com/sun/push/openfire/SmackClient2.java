@@ -1,4 +1,4 @@
-package com.sun.openfire;
+package com.sun.push.openfire;
 
 import java.io.IOException;
 
@@ -16,7 +16,6 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smackx.jiveproperties.JivePropertiesManager;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
 

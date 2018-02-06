@@ -23,7 +23,7 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * Created by sun on 2017/11/1 下午2:47.
  */
-@Service
+//@Service
 public class ShardingJdbcService {
 
 	@Resource(name = "shardingDataSource")

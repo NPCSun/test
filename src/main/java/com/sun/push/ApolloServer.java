@@ -85,7 +85,7 @@ public class ApolloServer {
 			token.waitForCompletion();
 			count++;
 			try {
-				Thread.sleep(2000);
+				Thread.sleep(1);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}

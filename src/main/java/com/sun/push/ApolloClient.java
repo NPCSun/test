@@ -19,10 +19,10 @@ public class ApolloClient {
 
 	private static String topicStr = "mqtt";
 
-	public static void main(String[] args) throws MqttException {
+	public static void newClient(String clientId) throws MqttException {
 		//host为主机名，test为clientid即连接MQTT的客户端ID，一般以客户端唯一标识符表示，
 		//MemoryPersistence设置clientid的保存形式，默认为以内存保存
-		client = new MqttClient(host, "01110", new MemoryPersistence());
+		client = new MqttClient(host, clientId, new MemoryPersistence());
 		MqttConnectOptions options = new MqttConnectOptions();
 		//设置是否清空session,这里如果设置为false表示服务器会保留客户端的连接记录，
 		//这里设置为true表示每次连接到服务器都以新的身份连接
@@ -55,7 +55,7 @@ public class ApolloClient {
 			@Override
 			public void messageArrived(String s, MqttMessage mqttMessage) throws Exception {
 				//subscribe后得到的消息会执行到这里面
-				System.out.println("messageArrived \t" + mqttMessage.toString());
+				System.out.println(clientId + "\t messageArrived \t" + mqttMessage.toString());
 			}
 
 			@Override
@@ -67,5 +67,11 @@ public class ApolloClient {
 		client.connect(options);
 		//订阅
 		client.subscribe(topicStr, 1);
+	}
+
+	public static void main(String[] args) throws MqttException {
+		for (int i=0; i<100; i++){
+			newClient("" + i);
+		}
 	}
 }

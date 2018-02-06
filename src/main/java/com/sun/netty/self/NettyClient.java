@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  */
 @Component("nettyClient")
 public class NettyClient {
-	public void connect(String host, int port, final ApplicationContext context) throws InterruptedException {
+	public ChannelFuture connect(String host, int port, final ApplicationContext context) throws InterruptedException {
 		EventLoopGroup group = new NioEventLoopGroup();
 		try {
 			Bootstrap b = new Bootstrap();
@@ -52,6 +52,7 @@ public class NettyClient {
 			future.awaitUninterruptibly(2000, TimeUnit.MILLISECONDS);
 
 			future.channel().closeFuture();
+			return future;
 		} finally {
 			//group.shutdownGracefully();
 		}

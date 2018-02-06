@@ -104,7 +104,7 @@ public class NettyServer {
 				System.out.println(message.getValue());
 				Message response = new Message();
 				response.setId(1001);
-				response.setValue("RPC response");
+				response.setValue("RPC response]]]]]]]]]]]]]");
 				transferMessage.setBody(JSON.toJSONString(response));
 				ctx.writeAndFlush(transferMessage);
 			}

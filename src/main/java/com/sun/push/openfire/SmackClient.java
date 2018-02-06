@@ -1,11 +1,10 @@
-package com.sun.openfire;
+package com.sun.push.openfire;
 
 import java.io.IOException;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.ConnectionListener;
-import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
@@ -13,22 +12,12 @@ import org.jivesoftware.smack.chat2.Chat;
 import org.jivesoftware.smack.chat2.ChatManager;
 import org.jivesoftware.smack.chat2.IncomingChatMessageListener;
 import org.jivesoftware.smack.chat2.OutgoingChatMessageListener;
-import org.jivesoftware.smack.im.SmackImInitializer;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
-import org.jivesoftware.smack.tcp.TCPInitializer;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.jivesoftware.smack.util.DNSUtil;
-import org.jivesoftware.smack.util.dns.DNSResolver;
-import org.jivesoftware.smack.util.dns.dnsjava.DNSJavaResolver;
-import org.jivesoftware.smack.util.stringencoder.Base64;
-import org.jivesoftware.smackx.jiveproperties.JivePropertiesManager;
 import org.jxmpp.jid.EntityBareJid;
 import org.jxmpp.jid.impl.JidCreate;
-import org.jxmpp.jid.impl.LocalAndDomainpartJid;
-import org.jxmpp.stringprep.XmppStringprepException;
-import sun.misc.BASE64Encoder;
 
 /**
  * Created by sun on 2018/1/30 上午10:58.

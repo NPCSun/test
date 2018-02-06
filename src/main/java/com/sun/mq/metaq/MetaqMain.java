@@ -2,6 +2,7 @@ package com.sun.mq.metaq;
 
 import java.sql.SQLException;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -14,7 +15,11 @@ import com.sun.netty.self.DefaultFuture;
 import com.sun.netty.self.Message;
 import com.sun.netty.self.TransferMessage;
 import com.sun.netty.self.NettyClient;
+import com.taobao.metamorphosis.client.extension.spring.MessageBuilder;
+import com.taobao.metamorphosis.client.extension.spring.MetaqTemplate;
+import com.taobao.metamorphosis.client.producer.SendResult;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 
 public class MetaqMain {
 
@@ -35,8 +40,16 @@ public class MetaqMain {
 					e.printStackTrace();
 				}
 			}
-		});
-		Thread.sleep(3000);
+		});*/
+		NettyClient client = (NettyClient) context.getBean("nettyClient");
+		try {
+			ChannelFuture connFuture = client.connect("127.0.0.1", 8082, context);
+			//connFuture.sync();
+			//System.out.println("conn complete");
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		//Thread.sleep(1000);
 		NettyClient.ClientHandler clientHandler = (NettyClient.ClientHandler)context.getBean("clientHandler");
 		Channel channel = clientHandler.getChannel();
 		Message message = new Message();
@@ -50,12 +63,12 @@ public class MetaqMain {
 
 		Message result = (Message)future.get(3000);
 
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>  " + result.getValue() + "  <<<<<<<<<<<<<<<<<<<<<<<<<");*/
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>  " + result.getValue() + "  <<<<<<<<<<<<<<<<<<<<<<<<<");
 
-		ShardingJdbcService shardingJdbcService = context.getBean("shardingJdbcService", ShardingJdbcService.class);
+		/*ShardingJdbcService shardingJdbcService = context.getBean("shardingJdbcService", ShardingJdbcService.class);
 		//shardingJdbcService.testInsertTransaction();
 		shardingJdbcService.testSelect();
-		/*MetaqTemplate metaqTemplate = context.getBean("metaqTemplate", MetaqTemplate.class);
+		MetaqTemplate metaqTemplate = context.getBean("metaqTemplate", MetaqTemplate.class);
 	    final String topic = "sunmq";
 	    try {
 			final SendResult sendResult = metaqTemplate
@@ -70,7 +83,7 @@ public class MetaqMain {
 		} finally{
 			cdl.countDown();
 		}
-	    *//*try {
+	    try {
 			cdl.await();
 		} catch (InterruptedException e) {
 			e.printStackTrace();
