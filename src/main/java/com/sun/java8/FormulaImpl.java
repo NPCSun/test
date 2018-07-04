@@ -11,6 +11,6 @@ public class FormulaImpl implements Formula {
 
 	public static void main(String[] args) {
 		Formula formula = new FormulaImpl();
-		//System.out.println(formula.sqrt(16));
+		System.out.println(formula.sqrt(16));
 	}
 }

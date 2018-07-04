@@ -25,10 +25,11 @@ public class HeartBeatTask implements Runnable{
 		}
 		Message message = new Message();
 		message.setId(1000);
-		message.setValue("i am heartbeat message");
+		message.setValue("i am heartbeat message from client.");
+		transferMessage.setClientId(9999);
 		transferMessage.setBody(JSON.toJSONString(message));
 		ctx.writeAndFlush(transferMessage);
 
-		ctx.executor().schedule(this, 5, TimeUnit.SECONDS);
+		ctx.executor().schedule(this, 15, TimeUnit.SECONDS);
 	}
 }

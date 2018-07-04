@@ -51,6 +51,7 @@ public class FutureCancelTest {
 	}
 	
 	public static void main(String[] args) throws InterruptedException  {
-		cancelCommonFuture();
+		//cancelCommonFuture();
+		cancelSleepFuture();
 	}
 }

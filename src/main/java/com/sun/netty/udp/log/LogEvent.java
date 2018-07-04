@@ -13,10 +13,12 @@ public final class LogEvent {
 
 	private final InetSocketAddress source;
 
-	private final String logfile;
+	/** 文件名*/
+	private final String logfileName;
 
 	private final String msg;
 
+	/** 时间毫秒数*/
 	private final long received;
 
 	public LogEvent(String logfile, String msg) {
@@ -25,7 +27,7 @@ public final class LogEvent {
 
 	public LogEvent(InetSocketAddress source, long received, String logfile, String msg) {
 		this.source = source;
-		this.logfile = logfile;
+		this.logfileName = logfile;
 		this.msg = msg;
 		this.received = received;
 	}

@@ -1,13 +1,9 @@
-/*
 package com.sun.java8;
 
 import java.util.ArrayList;
 import java.util.List;
 
-*/
-/**
- * Created by sun on 2017/9/29 上午11:14.
- *//*
+
 
 public class Test {
 
@@ -62,4 +58,3 @@ public class Test {
 		}
 	}
 }
-*/

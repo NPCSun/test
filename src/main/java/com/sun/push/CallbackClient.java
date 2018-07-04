@@ -19,7 +19,7 @@ public class CallbackClient {
 	private static String USERNAME = "admin";
 	private static String PASSWORD = "password";
 	private final static boolean CLEAN_START = true;
-	private final static short KEEP_ALIVE = 5;// 低耗网络，但是又需要及时获取数据，心跳30s
+	private final static short KEEP_ALIVE = 10;// 低耗网络，但是又需要及时获取数据，心跳30s
 	public static Topic[] topics = { new Topic("mqtt/fusesource/callback", QoS.EXACTLY_ONCE) };
 	public final static long RECONNECTION_ATTEMPT_MAX = 6;
 	public final static long RECONNECTION_DELAY = 2000;

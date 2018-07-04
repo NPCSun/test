@@ -122,11 +122,11 @@ public class NIOClient implements Runnable{
 
 	public static void main(String[] args) throws IOException, InterruptedException {
 //		test();
-		int count = 2;
+		int count = 1;
 		ExecutorService es = Executors.newFixedThreadPool(count);
 		NIOClient client;
 		for(int i=0; i< count; i++){
-			client = new NIOClient("127.0.0.1", 8000);
+			client = new NIOClient("127.0.0.1", 9000);
 			es.execute(client);
 		}
 		es.awaitTermination(100, TimeUnit.MINUTES);

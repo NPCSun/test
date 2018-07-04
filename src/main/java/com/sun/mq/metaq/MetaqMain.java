@@ -43,7 +43,7 @@ public class MetaqMain {
 		});*/
 		NettyClient client = (NettyClient) context.getBean("nettyClient");
 		try {
-			ChannelFuture connFuture = client.connect("127.0.0.1", 8082, context);
+			client.connect("127.0.0.1", 8082, context);
 			//connFuture.sync();
 			//System.out.println("conn complete");
 		} catch (InterruptedException e) {
@@ -55,7 +55,7 @@ public class MetaqMain {
 		Message message = new Message();
 		message.setId(1001);
 		message.setValue("RPC invoke");
-		TransferMessage transferMessage = new TransferMessage((byte)1, JSON.toJSONString(message));
+		TransferMessage transferMessage = new TransferMessage((byte)1, JSON.toJSONString(message), 0);
 		//
 		DefaultFuture future = new DefaultFuture(channel, message);
 

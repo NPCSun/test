@@ -248,7 +248,7 @@ public class NIOServer {
 	 */
 	public static void main(String[] args) throws IOException {
 		NIOServer server = new NIOServer();
-		server.initServerAndStart(8000);
+		server.initServerAndStart(9000);
 
 	}
 

@@ -38,9 +38,9 @@ public class NettyServerMain {
 	public void start() throws InterruptedException {
 		//System.getProperties().put("io.netty.noKeySetOptimization", true);
 		ServerBootstrap serverBootstrap = new ServerBootstrap();// 引导辅助程序
-		NioEventLoopGroup main = new NioEventLoopGroup(2, new NameThreadFactory("server-nio-main"));// 通过nio方式来接收连接和处理连接
+		NioEventLoopGroup main = new NioEventLoopGroup(1, new NameThreadFactory("server-nio-main"));// 通过nio方式来接收连接和处理连接
 		//acceptors.setIoRatio(70);
-		NioEventLoopGroup workers = new NioEventLoopGroup(2, new NameThreadFactory("server-nio-workers"));// 通过nio方式来接收连接和处理连接
+		NioEventLoopGroup workers = new NioEventLoopGroup(4, new NameThreadFactory("server-nio-workers"));// 通过nio方式来接收连接和处理连接
 		try {
 			serverBootstrap.localAddress(new InetSocketAddress(port));// 设置监听端口
 			serverBootstrap.group(main, workers);

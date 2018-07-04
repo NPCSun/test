@@ -89,7 +89,7 @@ public class MessageUtil {
 			X509Certificate cerx509 = (X509Certificate) cert;
 
 			// 获取私钥
-			PrivateKey prikey = (PrivateKey) keyStore.getKey(priKeyName, passphrase);
+			PrivateKey privateKey = (PrivateKey) keyStore.getKey(priKeyName, passphrase);
 
 			List<Certificate> certList = new ArrayList<Certificate>();
 			certList.add(cerx509);
@@ -100,7 +100,7 @@ public class MessageUtil {
 			//MD2withRSA MD5withRSA SHA1withRSA SHA224withRSA SHA256withRSA SHA384withRSA SHA512withRSA
 			CMSSignedDataGenerator cmsSignedDataGenerator = new CMSSignedDataGenerator();
 			ContentSigner sha1Signer = new JcaContentSignerBuilder("SHA512withRSA")
-											.build(prikey);
+											.build(privateKey);
 
 			SignerInfoGenerator signerInfoGenerator = new JcaSignerInfoGeneratorBuilder(new JcaDigestCalculatorProviderBuilder().build()).build(sha1Signer, cerx509);
 			cmsSignedDataGenerator.addSignerInfoGenerator(signerInfoGenerator);
@@ -108,7 +108,7 @@ public class MessageUtil {
 			cmsSignedDataGenerator.addCertificates(certs);
 
 			CMSSignedData sigData = cmsSignedDataGenerator.generate(msg, true);
-			System.out.println("加密耗时：" + (System.currentTimeMillis()-begin));
+			System.out.println("数字签名耗时：" + (System.currentTimeMillis()-begin));
 			return Base64.encode(sigData.getEncoded());
 
 		} catch (Exception e) {
@@ -158,7 +158,7 @@ public class MessageUtil {
 					verifyRet = false;
 				}
 			}
-			System.out.println("解密耗时：" + (System.currentTimeMillis()-begin));
+			System.out.println("验证数字签名耗时：" + (System.currentTimeMillis()-begin));
 		} catch (Exception e) {
 			verifyRet = false;
 			e.printStackTrace();
@@ -246,10 +246,13 @@ public class MessageUtil {
 	public static void main(String[] args) throws Exception {
 		MessageUtil messageUtil = new MessageUtil();
 
-		//客户端用公钥加密 传至服务端 私钥解密
-		String data = "客户端用公钥加密 传至服务端 私钥解密";
+		//数字签名
+		String data = "数字签名";
 		byte[] sign = messageUtil.signMessage(data, "UTF-8", "/root/sunfei", "123456");
 		messageUtil.signedDataVerify(Base64.decode(sign));
+
+		//数字信封
+		data = "数字信封";
 		String encryptPassword = messageUtil.envelopeMessage(data, "/root/sunfei.crt", "UTF-8");
 		String decryptPassword = messageUtil.openEnvelope(encryptPassword, "/root/sunfei", "123456", "UTF-8");
 		System.out.println("解密后：" + decryptPassword);
