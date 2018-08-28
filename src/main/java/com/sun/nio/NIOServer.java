@@ -87,7 +87,6 @@ public class NIOServer {
 					this.readAndWriteSelector.select(5000);
 					// 获得selector中选中的项的迭代器，选中的项为注册的事件
 					Iterator<?> ite = this.readAndWriteSelector.selectedKeys().iterator();
-					System.out.println(ite);
 					//System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" +this.acceptorSelector.selectedKeys().size());
 					while (ite.hasNext()) {
 						SelectionKey key = (SelectionKey) ite.next();

@@ -1,101 +1,42 @@
 package com.sun.socket;
 
-import java.io.IOException;
-import java.net.InetSocketAddress;
+import java.io.*;
 import java.net.Socket;
-
-import redis.clients.jedis.Protocol;
-import redis.clients.jedis.Protocol.Command;
-import redis.clients.jedis.exceptions.JedisConnectionException;
-import redis.clients.util.RedisInputStream;
-import redis.clients.util.RedisOutputStream;
-import redis.clients.util.SafeEncoder;
+import java.net.UnknownHostException;
 
 public class SocketClient {
-	private int timeout = 3;
-	private String host = "10.0.0.213";
-	private int port = 6379;
-	private Socket socket;
-	private RedisInputStream inputStream;
-	public static final byte DOLLAR_BYTE = '$';
-	public static final byte ASTERISK_BYTE = '*';
-	public static final byte PLUS_BYTE = '+';
-	public static final byte MINUS_BYTE = '-';
-	public static final byte COLON_BYTE = ':';
+    public static void main(String[] args) {
+        try {
+            //创建Socket对象
+            Socket socket=new Socket("localhost",8888);
 
-	public static final byte[] toByteArray(final int value) {
-		return SafeEncoder.encode(String.valueOf(value));
-	}
+            //根据输入输出流和服务端连接
+            OutputStream outputStream=socket.getOutputStream();//获取一个输出流，向服务端发送信息
+            PrintWriter printWriter=new PrintWriter(outputStream);//将输出流包装成打印流
+            printWriter.print("服务端你好，我是Balla_兔子");
+            printWriter.flush();
+            socket.shutdownOutput();//关闭输出流
 
-	public boolean isConnected() {
-		return socket != null && socket.isBound() && !socket.isClosed() && socket.isConnected()
-				&& !socket.isInputShutdown() && !socket.isOutputShutdown();
-	}
+            InputStream inputStream=socket.getInputStream();//获取一个输入流，接收服务端的信息
+            InputStreamReader inputStreamReader=new InputStreamReader(inputStream);//包装成字符流，提高效率
+            BufferedReader bufferedReader=new BufferedReader(inputStreamReader);//缓冲区
+            String info="";
+            String temp=null;//临时变量
+            while((temp=bufferedReader.readLine())!=null){
+                info+=temp;
+                System.out.println("客户端接收服务端发送信息："+info);
+            }
 
-	public void connect() {
-		if (!isConnected()) {
-			try {
-				socket = new Socket();
-				// ->@wjw_add
-				socket.setReuseAddress(true);
-				socket.setKeepAlive(true); // Will monitor the TCP connection is
-											// valid
-				socket.setTcpNoDelay(true); // Socket buffer Whetherclosed, to
-											// ensure timely delivery of data
-				socket.setSoLinger(true, 5); // Control calls close () method,
-												// the underlying socket is
-												// closed immediately
-				// <-@wjw_add
-
-				socket.connect(new InetSocketAddress(host, port), timeout);
-				socket.setSoTimeout(timeout);
-				final RedisOutputStream os = new RedisOutputStream(socket.getOutputStream());
-				final Command ttl = Protocol.Command.TTL;
-				final Command get = Protocol.Command.GET;
-				final byte[] key = SafeEncoder.encode(String.valueOf("redis"));
-				try {
-					os.write(ASTERISK_BYTE);
-					os.writeIntCrLf(1 + 1);
-					os.write(DOLLAR_BYTE);
-					/*os.writeIntCrLf(ttl.raw.length);
-					os.write(ttl.raw);*/
-					os.writeIntCrLf(get.raw.length);
-					os.write(get.raw);
-					os.writeCrLf();  
-					//
-					os.write(DOLLAR_BYTE);
-					os.writeIntCrLf(key.length);
-					os.write(key);
-					os.writeCrLf();
-					os.flush();
-				} catch (IOException e) {
-					throw new JedisConnectionException(e);
-				}
-
-				inputStream = new RedisInputStream(socket.getInputStream());
-				byte[] reply = new byte[1024];
-				inputStream.read(reply);
-				String replyStr = new String(reply);
-				System.out.println(replyStr);
-			} catch (Exception ex) {
-				ex.printStackTrace();
-				// swallow
-				// throw new JedisConnectionException(ex);
-			}
-		}
-	}
-
-	public static void main(String[] args) {
-		SocketClient sc = new SocketClient();
-		sc.connect();
-
-		/*CountDownLatch cdl = new CountDownLatch(1);
-		try {
-			cdl.await();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		System.exit(1);*/
-
-	}
+            //关闭相对应的资源
+            bufferedReader.close();
+            inputStream.close();
+            printWriter.close();
+            outputStream.close();
+            socket.close();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }
