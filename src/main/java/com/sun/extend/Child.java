@@ -17,7 +17,9 @@ public class Child extends Parent implements Serializable {
 
 	private String address = "child";
 
+    /*public void setName(String name) {
 
+    }*/
 
 	// deserialize to Object from given file
      public static Object deserialize(String fileName) throws IOException,

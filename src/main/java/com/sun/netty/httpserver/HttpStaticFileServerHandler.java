@@ -35,6 +35,7 @@ import java.util.regex.Pattern;
 import javax.activation.MimetypesFileTypeMap;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
@@ -116,6 +117,7 @@ public class HttpStaticFileServerHandler extends SimpleChannelInboundHandler<Ful
 
 	@Override
 	public void channelRead0(ChannelHandlerContext ctx, FullHttpRequest request) throws Exception {
+        ByteBufAllocator byteBufAllocator = ctx.alloc();
 		if (!request.decoderResult().isSuccess()) {
 			sendError(ctx, BAD_REQUEST);
 			return;

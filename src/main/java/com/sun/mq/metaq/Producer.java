@@ -1,10 +1,7 @@
-/*package com.sun.mq;
+package com.sun.mq;
 
 import java.io.UnsupportedEncodingException;
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.locks.ReentrantLock;
 
 import com.taobao.metamorphosis.Message;
@@ -17,7 +14,7 @@ import com.taobao.metamorphosis.exception.MetaClientException;
 import com.taobao.metamorphosis.utils.ZkUtils.ZKConfig;
 
 public class Producer {
-	
+
 	private final ReentrantLock mainLock = new ReentrantLock();
 
 	private ThreadPoolExecutor threadPool = new ThreadPoolExecutor(2, (int) (2 * 2), 50000, TimeUnit.MICROSECONDS,
@@ -111,4 +108,4 @@ public class Producer {
 			e.printStackTrace();
 		}
 	}
-}*/
+}

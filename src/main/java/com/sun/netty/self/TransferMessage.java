@@ -6,7 +6,9 @@ import java.io.Serializable;
 import java.nio.charset.Charset;
 
 /**
- * Created by sun on 2017/9/26 上午11:12.
+ *  消息结构：header1（1） | length（4） | header2（8） | data（X）
+ *
+ *  Created by sun on 2017/9/26 上午11:12.
  */
 @Data
 public class TransferMessage implements Serializable{

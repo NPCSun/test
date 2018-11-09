@@ -42,6 +42,7 @@ public class ServerMessageDecoder extends LengthFieldBasedFrameDecoder {
         byte type = frame.readByte();
         //
         int dataLength = frame.readInt();
+        //
         long clientId = frame.readLong();
 
         System.out.println("clientId:\t" + clientId);

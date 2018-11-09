@@ -1,6 +1,7 @@
 package com.sun.mq.metaq;
 
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -41,7 +42,7 @@ public class MetaqMain {
 				}
 			}
 		});*/
-		NettyClient client = (NettyClient) context.getBean("nettyClient");
+		/*NettyClient client = (NettyClient) context.getBean("nettyClient");
 		try {
 			client.connect("127.0.0.1", 8082, context);
 			//connFuture.sync();
@@ -63,12 +64,14 @@ public class MetaqMain {
 
 		Message result = (Message)future.get(3000);
 
-		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>  " + result.getValue() + "  <<<<<<<<<<<<<<<<<<<<<<<<<");
+		System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>  " + result.getValue() + "  <<<<<<<<<<<<<<<<<<<<<<<<<");*/
 
-		/*ShardingJdbcService shardingJdbcService = context.getBean("shardingJdbcService", ShardingJdbcService.class);
+		ShardingJdbcService shardingJdbcService = context.getBean(ShardingJdbcService.class);
 		//shardingJdbcService.testInsertTransaction();
-		shardingJdbcService.testSelect();
-		MetaqTemplate metaqTemplate = context.getBean("metaqTemplate", MetaqTemplate.class);
+        //shardingJdbcService.testSelect();
+		shardingJdbcService.testCount();
+		shardingJdbcService.testSum();
+		/*MetaqTemplate metaqTemplate = context.getBean("metaqTemplate", MetaqTemplate.class);
 	    final String topic = "sunmq";
 	    try {
 			final SendResult sendResult = metaqTemplate

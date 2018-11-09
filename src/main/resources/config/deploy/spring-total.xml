@@ -18,6 +18,8 @@
     <context:annotation-config />
 	<context:component-scan base-package="com.sun" annotation-config="true" />
 	<!--<import resource="classpath:config/deploy/spring-metaq.xml"/>-->
-	<!--<import resource="classpath:config/deploy/spring-dal.xml"/>-->
-	<import resource="classpath:config/deploy/kafka-consumer.xml"/>
+	<import resource="classpath:config/deploy/spring-dal.xml"/>
+	<!--<import resource="classpath:config/deploy/kafka-consumer.xml"/>-->
+
+    <aop:aspectj-autoproxy proxy-target-class="true"/>
 </beans>

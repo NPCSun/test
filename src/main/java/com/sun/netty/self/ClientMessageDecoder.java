@@ -29,7 +29,7 @@ public class ClientMessageDecoder extends LengthFieldBasedFrameDecoder {
         byte type = frame.readByte();
         //
         int dataLength = frame.readInt();
-
+        //
         long serverId = frame.readLong();
 
         System.out.println("serverId:\t" + serverId);
@@ -38,9 +38,8 @@ public class ClientMessageDecoder extends LengthFieldBasedFrameDecoder {
         frame.readBytes(data);
 
         String body = new String(data, "UTF-8");
-        TransferMessage msg = new TransferMessage(type, dataLength, body);
 
-        return msg;
+        return new TransferMessage(type, dataLength, body);
 
     }
 }

@@ -49,6 +49,7 @@ public class NettyServer {
                         public void initChannel(SocketChannel ch) throws Exception {
 
                             ChannelPipeline p = ch.pipeline();
+                            //lengthAdjustment=8, the length of clientId(Long)
                             p.addLast(new ServerMessageDecoder(1 << 20, 1, 4, 8, 0));
                             p.addLast(new MessageEncoder());
                             p.addLast(new ServerHandler());

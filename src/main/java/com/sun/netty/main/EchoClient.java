@@ -48,13 +48,13 @@ public class EchoClient {
 			});
 			ChannelFuture f = b.connect().sync();
 
-			
+
 			 * f.addListener(new ChannelFutureListener() { public void
 			 * operationComplete(ChannelFuture future) throws Exception {
 			 * if(future.isSuccess()){ System.out.println("client connected");
 			 * }else{ System.out.println("server attemp failed");
 			 * future.cause().printStackTrace(); } } });
-			 
+
 
 			f.channel().closeFuture().sync();
 		} catch (InterruptedException e) {

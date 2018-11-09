@@ -68,7 +68,6 @@ public class NIOServer {
 		private final Selector readAndWriteSelector = Selector.open();
 
 		ReadWriteReactor() throws IOException {
-
 		}
 
 		public void register(SocketChannel socketchannel) throws ClosedChannelException {
