@@ -41,7 +41,7 @@ public class Hbase {
         TableName name = TableName.valueOf(tableName);
 
         if (admin.tableExists(name)) {
-            System.err.println("table exists!");
+            System.err.println("table exists!0806");
         } else {
             HTableDescriptor desc = new HTableDescriptor(name);
 
