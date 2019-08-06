@@ -8,6 +8,7 @@ import org.apache.hadoop.hbase.util.Bytes;
 import java.io.IOException;
 
 public class Hbase {
+    //测试注释0806
     // 声明静态配置
     private static Configuration conf = null;
 
