@@ -127,14 +127,14 @@ public class CompletableFutureTest {
 
         CompletableFuture<Object> anyResult = CompletableFuture.anyOf(completableFuture1, completableFuture2);
 
-        System.out.println("anyOf -> 第一个完成的任务结果:" + anyResult.get());
+        //System.out.println("anyOf -> 第一个完成的任务结果:" + anyResult.get());
 
         CompletableFuture<Void> allResult = CompletableFuture.allOf(completableFuture1, completableFuture2);
 
+        allResult.get();
+        System.out.println("第一个完成的任务结果:" + completableFuture1.get());
+        System.out.println("第二个完成的任务结果:" + completableFuture2.get());
         //阻塞等待所有任务执行完成
-        allResult.join();
-        System.out.println("allOf -> 所有任务执行完成");
-
     }
 
     /**
@@ -235,6 +235,6 @@ public class CompletableFutureTest {
 
     public static void main(String[] args) throws Throwable {
         //thenApply();
-        test1();
+        test4();
     }
 }

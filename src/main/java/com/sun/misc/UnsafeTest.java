@@ -1,3 +1,4 @@
+/*
 package com.sun.misc;
 
 import static sun.misc.Unsafe.getUnsafe;
@@ -8,13 +9,14 @@ import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.sun.agent.ObjectShallowSizeAgent;
 import lombok.Data;
 import sun.misc.Unsafe;
 
+*/
 /**
  * Created by sun on 2017/10/17 上午10:16.
- a*/
+ a*//*
+
 public class UnsafeTest {
 
 	private static Unsafe unsafe;
@@ -93,12 +95,14 @@ public class UnsafeTest {
 		return array[0];
 	}
 
-	/**
+	*/
+/**
 	 * 没测试通过
 	 * @param obj
 	 * @return
 	 * @throws Exception
-	 */
+	 *//*
+
 	static Object shallowCopy(Object obj) throws Exception {
 		long size = ObjectShallowSizeAgent.sizeOf(obj);
 		long start = toAddress(obj);
@@ -180,3 +184,4 @@ public class UnsafeTest {
 		System.out.println(ObjectShallowSizeAgent.sizeOf(map));
 	}
 }
+*/
