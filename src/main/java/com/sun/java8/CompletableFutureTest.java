@@ -6,6 +6,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.junit.Test;
+import org.slf4j.MDC;
 
 /**
  * Created by sun on 2018/2/8 上午9:35.
@@ -104,8 +105,10 @@ public class CompletableFutureTest {
         CompletableFuture<String> completableFuture1 = CompletableFuture.supplyAsync(() -> {
             //模拟执行耗时任务
             System.out.println("task1 doing...");
+            MDC.put("key", "completableFuture1");
             try {
-                Thread.sleep(3000);
+                Thread.sleep(2000);
+                System.out.println(MDC.get("key"));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -116,22 +119,30 @@ public class CompletableFutureTest {
         CompletableFuture<String> completableFuture2 = CompletableFuture.supplyAsync(() -> {
             //模拟执行耗时任务
             System.out.println("task2 doing...");
+            MDC.put("key", "completableFuture2");
             try {
-                Thread.sleep(6000);
+                Thread.sleep(4000);
+                System.out.println(MDC.get("key"));
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            }
+            if (true) {
+                //throw new RuntimeException();
             }
             //返回结果
             return "result2";
         });
 
         CompletableFuture<Object> anyResult = CompletableFuture.anyOf(completableFuture1, completableFuture2);
-
         //System.out.println("anyOf -> 第一个完成的任务结果:" + anyResult.get());
 
         CompletableFuture<Void> allResult = CompletableFuture.allOf(completableFuture1, completableFuture2);
 
-        allResult.get();
+        try {
+            allResult.join();
+        } catch (Exception e) {
+            System.out.println("异常了");
+        }
         System.out.println("第一个完成的任务结果:" + completableFuture1.get());
         System.out.println("第二个完成的任务结果:" + completableFuture2.get());
         //阻塞等待所有任务执行完成
