@@ -9,4 +9,4 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 public class BaseJunit4Test {
 
 
-} 
+}
