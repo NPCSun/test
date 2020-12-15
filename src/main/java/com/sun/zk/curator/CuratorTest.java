@@ -1,3 +1,4 @@
+/*
 package com.sun.zk.curator;
 
 import java.net.InetAddress;
@@ -17,9 +18,11 @@ import org.apache.curator.retry.RetryForever;
 import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
+*/
 /**
  * Created by sun on 2018/2/24 上午8:54.
- */
+ *//*
+
 public class CuratorTest {
 	static CuratorFramework cf = CuratorFrameworkFactory.builder().
 			connectString("localhost:2181").
@@ -77,3 +80,4 @@ public class CuratorTest {
 		}
 	}
 }
+*/
