@@ -11,11 +11,11 @@ import org.apache.zookeeper.CreateMode;
 import org.apache.zookeeper.data.Stat;
 
 /**
- * @Deacription TODO
- * @Author sunking
- * @Date 2020/12/15} 8:58 上午
+ * 集群环境下，雪花生成器workId注册器
+ * @author sunking
+ * @date 2020/12/16 6:21 下午
  **/
-public class IPTest {
+public class ClusterSnowflakeWorkIdRegister {
 
 	// Zk客户端
 	private CuratorFramework	client;
@@ -81,7 +81,7 @@ public class IPTest {
 		return workId;
 	}
 
-	private IPTest() {
+	private ClusterSnowflakeWorkIdRegister() {
 		System.setProperty("zookeeper.sasl.client", "false");
 		RetryPolicy retryPolicy = new ExponentialBackoffRetry(5000, 2);
 		client = CuratorFrameworkFactory.newClient("127.0.0.1:2181", retryPolicy);
@@ -119,15 +119,15 @@ public class IPTest {
 	}
 
 	public static void main(String[] args) {
-		IPTest ipTest = new IPTest();
+		ClusterSnowflakeWorkIdRegister clusterSnowflakeWorkIdRegister = new ClusterSnowflakeWorkIdRegister();
 		try {
 			for (int i = 0; i < 64; i++) {
-				ipTest.registerWorkId();
+				clusterSnowflakeWorkIdRegister.registerWorkId();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
-			ipTest.client.close();
+			clusterSnowflakeWorkIdRegister.client.close();
 		}
 	}
 
